@@ -1,15 +1,18 @@
-// "use client";
+"use client";
 
 import React from "react";
-// import DefaultLayout from "../components/Layout/DefaultLayout";
 import {Button, Card} from "antd";
-// import {observer} from "mobx-react-lite";
-// import {useStore} from "../components/StoreProvider";
+import {store} from "#/store";
+import {observer} from "mobx-react-lite";
 
-export default function Page() {
-    // const store = useStore();
+const Page = observer(() => {
     return <div>
-        about
-    </div>
-};
+        about: {store.ui.title}
+        <Button onClick={() => {
+            store.ui.changeTitle("from about")
+        }}>change title</Button>
+    </div>;
+});
+
+export default Page;
 
