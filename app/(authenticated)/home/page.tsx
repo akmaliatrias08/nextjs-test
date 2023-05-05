@@ -3,10 +3,9 @@
 import React from "react";
 import {Button, Card} from "antd";
 import {store} from "#/store";
-import {observer} from "mobx-react-lite";
 import {sampleRepository} from "#/repository/sample";
 
-const Page = observer(() => {
+const Page = () => {
     const { data, error, isLoading }  = sampleRepository.hooks.useJoke();
     return <div>
         <div>
@@ -19,7 +18,7 @@ const Page = observer(() => {
             store.ui.changeTitle("from home")
         }}>change title</Button>
     </div>;
-});
+};
 
 export default Page;
 
