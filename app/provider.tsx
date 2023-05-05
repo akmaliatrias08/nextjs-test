@@ -6,10 +6,10 @@ import {TokenUtil} from "#/utils/token";
 
 TokenUtil.loadToken();
 export const Provider = ({children}: any) => {
-  useEffect(() => {
-    // @ts-ignore
-    document.documentElement.style.opacity = 1
-  }, []);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   document.documentElement.style.opacity = 1
+  // }, []);
 
   return <ConfigProvider
     theme={{

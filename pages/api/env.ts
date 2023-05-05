@@ -5,7 +5,7 @@ export default function handler(
     req: NextApiRequest,
     res: NextApiResponse<string>
 ) {
-    const config = Object.keys(process.env).filter(it => it.startsWith('NEXT_PUBLIC_')).reduce((acc,curr) => {
+    const config = Object.keys(process.env).filter(it => it.startsWith('DYNAMIC_ENV_')).reduce((acc,curr) => {
         acc[curr] = process.env[curr] ?? '';
         return acc;
     }, {} as {[key: string]: string});
@@ -21,9 +21,5 @@ export default function handler(
     res.setHeader("Expires", "0");
     res.setHeader("Content-Type", "text/javascript");
 
-    res.status(200).send(`
-    <script>
-    window.serverEnv = ${configString};
-</script>
-    `)
+    res.status(200).send(`window.serverEnv = ${configString};`)
 }
