@@ -2,28 +2,60 @@
 
 import React, {useState} from "react";
 // import {observer} from 'mobx-react-lite';
-import {Button, Card, Checkbox, Col, Form, Input, Row, Typography} from 'antd';
+import {Button, Card, Checkbox, Col, Form, Input, Row, Typography, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
+import { authRepository } from "#/repository/auth";
+import { useRouter } from "next/navigation";
 // import ParticlesLayout from "../components/Layout/ParticlesLayout";
+interface ErrorLogin {
+    response : {
+        body: {
+            statusCode: number
+            error: string
+        }
+    }
+}
+interface SuccessLogin {
+    body: {
+        data: {
+            access_token: string
+        }
+        statusCode: number
+        message: string
+    }
+}
 
 const Login = () => {
     // const store = useStore();
+    const router = useRouter()
     const [loading, setLoading] = useState(false);
 
     // let history = useHistory();
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-        enterLoading(values).then(res => {
-            console.log(res, "awasaa");
-        }).catch((error) => {
-            console.log({error}, "awasaa error");
-        });
-    };
-
-    const enterLoading = async (props: any) => {
-        // store.setInitialToken("ayayay", "clap");
-        // return history.push("/app/page_example_1");
+    const onFinish = async (values: any) => {
+        setLoading(true)
+        try {
+            const data = {
+                username: values?.username, 
+                password: values?.password
+            }
+    
+            const login = await authRepository.manipulateData.login(data)
+            const token = (login as SuccessLogin)?.body?.data
+            
+            localStorage.setItem("access_token", token?.access_token)
+            setLoading(false)
+            router.push("/home")
+            
+        } catch (error) {
+            setLoading(false)
+            const errorResponse = (error as ErrorLogin)?.response?.body
+            if (errorResponse?.statusCode == 400){
+                message.error(errorResponse?.error)
+            } else {
+                message.error(errorResponse?.error)
+            }  
+        }
     };
 
     return <div style={{width: '100vw', display: 'flex', justifyContent: 'center'}}>
@@ -64,15 +96,15 @@ const Login = () => {
                             onFinish={onFinish}
                         >
                             <Form.Item
-                                label="Email"
-                                name="email"
+                                label="Username"
+                                name="username"
                                 // size={'large'}
                                 rules={[{required: false, message: 'Please input your Username!'}]}
                             >
                                 <Input
                                     prefix={<UserOutlined className="site-form-item-icon"/>}
                                     type="text"
-                                    placeholder="Email"/>
+                                    placeholder="Username"/>
                             </Form.Item>
 
                             <Form.Item
@@ -125,7 +157,7 @@ const Login = () => {
                                         loading={loading}
                                         htmlType="submit"
                                         size={'large'}
-                                        onSubmit={enterLoading}
+                                        // onSubmit={enterLoading}
                                         className="login-form-button">
                                     Sign In
                                 </Button>
