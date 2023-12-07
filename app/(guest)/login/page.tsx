@@ -26,35 +26,25 @@ interface SuccessLogin {
 }
 
 const Login = () => {
-    // const store = useStore();
     const router = useRouter()
     const [loading, setLoading] = useState(false);
 
     // let history = useHistory();
 
     const onFinish = async (values: any) => {
-        setLoading(true)
+        console.log('Received values of form: ', values);
         try {
-            const data = {
-                username: values?.username, 
+           const data = {
+                username: values?.username,
                 password: values?.password
             }
-    
-            const login = await authRepository.manipulateData.login(data)
-            const token = (login as SuccessLogin)?.body?.data
-            
-            localStorage.setItem("access_token", token?.access_token)
-            setLoading(false)
+
+           const login = await authRepository.manipulateData.login(data) 
+        //    console.log(login, "Hasil API Login")
+            localStorage.setItem("access_token", login?.body?.data?.access_token)
             router.push("/home")
-            
         } catch (error) {
-            setLoading(false)
-            const errorResponse = (error as ErrorLogin)?.response?.body
-            if (errorResponse?.statusCode == 400){
-                message.error(errorResponse?.error)
-            } else {
-                message.error(errorResponse?.error)
-            }  
+            message.error(error.response.body.error)
         }
     };
 

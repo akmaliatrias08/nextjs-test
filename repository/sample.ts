@@ -13,10 +13,10 @@ const hooks = {
 	}
 }
 
-const api = {
+const manipulateData = {
 
 }
 
 export const sampleRepository = {
-	url, hooks, api
+	url, hooks, manipulateData
 }

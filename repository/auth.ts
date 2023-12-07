@@ -12,5 +12,5 @@ const manipulateData = {
 
 export const authRepository = {
     url, 
-    manipulateData,
+    manipulateData
 }
